@@ -1,0 +1,141 @@
+Kubernetes:
+container orchestration tool
+depends on docker containers
+
+- Kubernetes cluster 
+- API - to communicate with UI , cli and manifest files
+- Schedular - to schedule pods
+- etcd - for backup and snapshots
+- nodes [virtual machines or physical servers]
+- master node [controller manager] - it conatins control plane which manages the pods in worker nodes
+- worker nodes [run pods in it]
+
+cluster -> multiple nodes -> multiple pods -> multiple containers
+
+Nodes
+virtual machines or physical servers
+- kubectl get nodes -o wide
+- kubectl describe node nodename
+
+Namespaces
+it is a complete saggregation and it is used for abstraction
+it contains a pod with unique name within namspace.
+- kubectl create ns nsname
+- kubectl describe ns nsname
+- kubectl run podname --image=inginx:latest -n nsname
+- kubectl create ns nsname --dry-run=client -o yaml > namespace.yaml
+- kubectl get pods -n nsname
+
+Pod 
+it is a small depoyemnt in kubernets which contains containers
+it is used to run a instance of an application
+- kubectl run podname --image=inginx:latest --port=8080
+- kubectl run podname --image=inginx:latest --port=8080 --dry-run=client -o yaml > pod.yaml
+- kubectl exec -it podname -- sh
+- kubectl get pods
+- kubectl run podname --image=nginx --image=ubuntu
+- kubectl logs podname
+
+Deployemnt
+it is used to create pods and replica set
+- kubectl create deployment dname --image=nginx --replicas=3
+- kubectl describe deployments.apps dname
+- kubectl describe deployments.apps -A
+- kubectl scale deployments.apps dname --replicas=5
+- kubectl delete deployments.apps dname
+.spec.strategy.type==recreate 
+.spec.strategy.type==rollingupdate
+
+Replicaset
+it is used to maintain high availability and performance
+it is for maintaining constant number of pods for load balancing
+- kubectl scale --replicas=2 rs/frontend
+- kubectl delete rs frontend
+- kubectl get rs
+
+Daemonsets
+it is used for garbage collection
+
+Service (svc)
+a service get allocated a virtual ip address to communicate.
+- cluster ip = it is for commincating inside the cluster , not to outside world
+- nodeport = it opens specific port for all the nodes in cluster and sent traffic to port 
+- loadbalancer = it can be accesed over the internet , it creates nlb with one ip
+- External name - it is allows to use dns names to route requests inside cluster indtaed of clusterip
+- kubectl expose deployemnt/my-nginx
+- kubectl describe svc
+- kubectl delete svc svc-name
+
+
+Ingress
+it is used to route incoming traffic to your application  using http and https
+
+configmaps
+it is used to store non-confidential data in key-value pairs , pods can use them as env variables
+- kubectl create configmap myconfig --from-env-file=satya
+- kubectl get configmap satya
+- kubectl describe configmap satya
+- kubectl delete configmap satya
+
+secrets
+it contains small amount of sensitive data 
+- adding the files in volumes
+- adding in environment var
+- pulling from images
+kubectl create secret satya generic my-secret --from-literal=key1=supersecret
+- kubectl describe secret satya
+- kubectl delete secret satya
+
+Storage
+these are used for storing multiple forms of persistent and non-persistent data in a Kubernetes cluster
+- file
+- block
+- object
+
+Jobs
+A Job creates one or more Pods and will continue to retry execution of the Pods until a specified number of them successfully terminate
+Cronjob
+it creates job on repeating schedule
+- kubectl create job my-job --image=nginx -- date
+- kubectl describe job my-job
+- kubectl get job -A
+
+
+Kubectl apply -f satya.yaml 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
